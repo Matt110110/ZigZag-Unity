@@ -7,7 +7,8 @@ public class BallController : MonoBehaviour
 
     [SerializeField] // SerializeField makes sure the speed is visible in the Unity editor
     private float speed;
-    bool started = false;
+    bool started;
+    bool gameOver;
 
     Rigidbody rb; // Used for any game object with a RigidBody attached to it
 
@@ -19,7 +20,8 @@ public class BallController : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-
+        started = false;
+        gameOver = false;
     }
 	
 	// Update is called once per frame
@@ -33,13 +35,18 @@ public class BallController : MonoBehaviour
                 started = true;
             }
         }
-        else
+
+        if (!Physics.Raycast(transform.position, Vector3.down, 1f)) // Casts a ray downwards and returns true if it collides with other game objects. 
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                SwitchDirection();
-            }
+            gameOver = true;
+            rb.velocity = new Vector3(0, -25f, 0); // Normal Coordinate vector applies. + means upwards while - means downwards
         }
+
+        if (Input.GetMouseButtonDown(0) && !gameOver)
+        {
+            SwitchDirection();
+        }
+        
 		
 	}
 
